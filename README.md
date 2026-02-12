@@ -51,7 +51,7 @@ Convert any text into speech using Microsoft's text-to-speech technology and pla
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/GudisaSandeep/Interactive-AI/tree/master
+   git clone https://github.com/girishavallabhaneni/Interactive-AI/tree/master
    cd Interactive-AI
    ```
 
@@ -90,7 +90,7 @@ This project is licensed under the MIT License.
 
 For any inquiries or contributions, please contact:
 
-- **Developer**: Sandeep Gudisa
-- **Email**: gudisasandeep141312@gmail.com
+- **Developer**: Vallabhaneni Girisha
+- **Email**: girishavallabhaneni123@gmail.com
 
 
