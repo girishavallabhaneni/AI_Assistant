@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Interaction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Voice Interaction</h1>
+    <button id="startBtn">Start Interaction</button>
+    <button id="stopBtn" disabled>Stop Interaction</button>
+    <br><br>
+    <input type="text" id="textInput" placeholder="Enter your message" disabled>
+    <button id="sendBtn" disabled>Send</button>
+    <br><br>
+    <div id="conversation"></div>
+
+    <script>
+        let isRunning = false;
+
+        $('#startBtn').click(function() {
+            $.post('/start-voice-interaction', function(data) {
+                console.log(data.status);
+                isRunning = true;
+                $('#startBtn').prop('disabled', true);
+                $('#stopBtn').prop('disabled', false);
+                $('#textInput').prop('disabled', false);
+                $('#sendBtn').prop('disabled', false);
+            });
+        });
+
+        $('#stopBtn').click(function() {
+            $.post('/stop-voice-interaction', function(data) {
+                console.log(data.status);
+                isRunning = false;
+                $('#startBtn').prop('disabled', false);
+                $('#stopBtn').prop('disabled', true);
+                $('#textInput').prop('disabled', true);
+                $('#sendBtn').prop('disabled', true);
+                displayConversation(data.conversation);
+            });
+        });
+
+        $('#sendBtn').click(function() {
+            const textInput = $('#textInput').val();
+            if (textInput) {
+                $.ajax({
+                    url: '/process-voice-input',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ text: textInput }),
+                    success: function(data) {
+                        console.log(data);
+                        $('#textInput').val('');
+                        displayMessage('You', textInput);
+                        displayMessage('Assistant', data.text);
+                        if (data.audio) {
+                            playAudio(data.audio);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
+        function displayMessage(role, text) {
+            $('#conversation').append(`<p><strong>${role}:</strong> ${text}</p>`);
+        }
+
+        function displayConversation(conversation) {
+            $('#conversation').empty();
+            conversation.forEach(entry => {
+                const role = Object.keys(entry)[0];
+                const text = entry[role];
+                displayMessage(role, text);
+            });
+        }
+
+        function playAudio(audioBase64) {
+            const audio = new Audio(`data:audio/mp3;base64,${audioBase64}`);
+            audio.play();
+        }
+    </script>
+</body>
+</html>
