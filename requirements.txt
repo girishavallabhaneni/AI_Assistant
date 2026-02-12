@@ -1,0 +1,17 @@
+Flask
+python-dotenv
+google-cloud-core
+google-generativeai
+Pillow
+SpeechRecognition
+edge-tts
+pygame
+assemblyai
+translate
+uuid
+elevenlabs
+youtube-transcript-api
+pydantic
+PyAudio
+
+
